@@ -1,50 +1,140 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DeTaiCuoiKy_Nhom6</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/DeTaiCuoiKy_Nhom6.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"] - ToDoTech</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+            body {
+                font-family: 'Inter', sans-serif;
+                background-color: #f4f7fe;
+                color: #333;
+            }
+
+            .navbar {
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+            .nav-link {
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+
+                .nav-link:hover {
+                    color: #0d6efd !important;
+                    transform: translateY(-1px);
+                }
+
+            .card {
+                border: none;
+                border-radius: 16px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+            }
+
+            .btn {
+                border-radius: 10px;
+                font-weight: 500;
+                padding: 8px 18px;
+                transition: all 0.2s ease;
+            }
+
+                .btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                }
+    </style>
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">DeTaiCuoiKy_Nhom6</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-primary fs-4" asp-controller="CongViec" asp-action="Index">
+                <i class="fa-solid fa-square-check me-2"></i>ToDoTech
+            </a>
+            <button class="navbar-collapse text-end navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-3">
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="CongViec" asp-action="Index">
+                            <i class="fa-solid fa-list-check me-1 text-secondary"></i> Công việc
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile">
+                            <i class="fa-solid fa-circle-user me-1 text-secondary"></i> Hồ sơ cá nhân
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-shield-halved text-warning me-1"></i> Kiểm thử Quyền
+                        </a>
+                        <ul class="dropdown-menu border-0 shadow mt-2" style="border-radius: 12px;">
+                            <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="AdminSettings"><i class="fa-solid fa-gear me-2 text-muted"></i>Cấu hình Admin</a></li>
+                            <li><a class="dropdown-item py-2" asp-controller="Account" asp-action="UserManagement"><i class="fa-solid fa-users-gear me-2 text-muted"></i>Quản lý Thành viên</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center">
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <span class="me-3 fw-medium text-secondary">Xin chào, <span class="text-dark fw-bold">@User.Identity.Name</span></span>
+                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-3"><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Đăng xuất</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-sm btn-outline-primary me-2">Đăng nhập</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary">Đăng ký</a>
+                    }
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
+        </div>
+    </nav>
+
+    <div class="container mb-5">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - DeTaiCuoiKy_Nhom6 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    @if (TempData["ToastMessage"] != null)
+    {
+        <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
+            <div id="liveToast" class="toast show align-items-center text-white bg-dark border-0 rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body fs-6 py-3">
+                        <i class="fa-solid fa-bell text-warning me-2"></i> @TempData["ToastMessage"]
+                    </div>
+                    <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    }
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Tự động ẩn Toast sau 4 giây
+        var toastEl = document.getElementById('liveToast');
+        if (toastEl) {
+        setTimeout(function () {
+        var toast = new bootstrap.Toast(toastEl);
+        toast.hide();
+        }, 4000);
+        }
+    </script>
 </body>
 </html>
